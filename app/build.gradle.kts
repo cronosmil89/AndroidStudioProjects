@@ -6,6 +6,7 @@ plugins {
 
     // 🟢 AGREGA ESTA LÍNEA (KAPT ya viene incluido en Kotlin, no lleva versión manual):
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24" // Pon la misma versión que tus otros plugins de Kotlin
 }
 
 android {
@@ -65,4 +66,9 @@ dependencies {
 
     // 🟢 Asegúrate de que el compilador de KSP use exactamente la misma variable de versión
     ksp("androidx.room:room-compiler:$roomVersion")
+    val ktorVersion = "2.3.11"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion") // Motor de conexión nativo
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion") // Negociación de contenido
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion") // Convertidor JSON nativo
 }
