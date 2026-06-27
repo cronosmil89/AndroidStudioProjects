@@ -1,6 +1,5 @@
 package com.example.androidlearningpath
-
-import android.content.Context
+import androidx.compose.ui.unit.dp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,21 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
+import androidx.hilt.navigation.compose.hiltViewModel // 🟢 Import clave
+import dagger.hilt.android.AndroidEntryPoint // 🟢 Import clave
 
 
-val httpClient = HttpClient(CIO) {
-    install(ContentNegotiation) {
-        json(Json { ignoreUnknownKeys = true })
-    }
-}
-
+@AndroidEntryPoint // 🟢 Le avisa a Hilt que esta pantalla va a recibir inyecciones
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +22,9 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
-                    // Factory manual provisional para armar la arquitectura
-                    val context = LocalContext.current
-                    val database = remember { AppDatabase.getDatabase(context) }
-                    val repository = remember { TareaRepository(database.tareaDao()) }
-                    val viewModel = remember { TareaViewModel(repository) }
+                    // 🟢 YA NO HAY FACTORY MANUAL. Hilt fabrica todo por detrás:
+                    val viewModel: TareaViewModel = hiltViewModel()
 
-                    // Disparador inicial
                     LaunchedEffect(Unit) {
                         viewModel.cargarTareasIniciales()
                     }

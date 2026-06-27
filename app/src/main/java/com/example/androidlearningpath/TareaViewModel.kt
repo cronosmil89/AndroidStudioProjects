@@ -3,11 +3,16 @@ package com.example.androidlearningpath
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel // 🟢 Import nuevo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject // 🟢 Import nuevo
 
-class TareaViewModel(private val repository: TareaRepository) : ViewModel() {
+@HiltViewModel
+class TareaViewModel @Inject constructor(
+    private val repository: TareaRepository // 🟢 Hilt inyectará esto automáticamente
+) : ViewModel() {
 
     // Lista reactiva que la UI va a observar
     val listaTareas = mutableStateListOf<TareaEntity>()

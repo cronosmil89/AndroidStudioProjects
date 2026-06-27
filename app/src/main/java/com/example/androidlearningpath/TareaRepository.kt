@@ -1,11 +1,15 @@
 package com.example.androidlearningpath
 
-import io.ktor.client.request.*
+import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TareaRepository(private val tareaDao: TareaDao) {
+class TareaRepository(
+    private val tareaDao: TareaDao,
+    private val httpClient: HttpClient
+) {
 
     // Obtener datos locales
     suspend fun getTareasLocales(): List<TareaEntity> = withContext(Dispatchers.IO) {

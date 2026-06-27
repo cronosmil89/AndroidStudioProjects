@@ -1,26 +1,20 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    // 🔴 BORRA O COMENTA ESTA LÍNEA:
-    // id("com.google.devtools.ksp") version "1.9.22-1.0.17"
-
-    // 🟢 AGREGA ESTA LÍNEA (KAPT ya viene incluido en Kotlin, no lleva versión manual):
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24" // Pon la misma versión que tus otros plugins de Kotlin
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.example.androidlearningpath"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.androidlearningpath"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -29,14 +23,19 @@ android {
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
@@ -59,16 +58,22 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    val roomVersion = "2.7.0-alpha01"
-
+// 🟢 ROOM
+    val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion") // <-- Asegúrate de que use ksp("...") con paréntesis
 
-    // 🟢 Asegúrate de que el compilador de KSP use exactamente la misma variable de versión
-    ksp("androidx.room:room-compiler:$roomVersion")
+    // 🟢 KTOR
     val ktorVersion = "2.3.11"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion") // Motor de conexión nativo
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion") // Negociación de contenido
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion") // Convertidor JSON nativo
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    // 🟢 HILT
+    val hiltVersion = "2.51.1"
+    implementation("com.google.dagger:hilt-android:$hiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$hiltVersion") // <-- Revisa que diga ksp("...") y NO hilt("...") ni cosas raras
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }
