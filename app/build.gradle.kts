@@ -1,6 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    // 🔴 BORRA O COMENTA ESTA LÍNEA:
+    // id("com.google.devtools.ksp") version "1.9.22-1.0.17"
+
+    // 🟢 AGREGA ESTA LÍNEA (KAPT ya viene incluido en Kotlin, no lleva versión manual):
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -53,4 +58,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+    val roomVersion = "2.7.0-alpha01"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+
+    // 🟢 Asegúrate de que el compilador de KSP use exactamente la misma variable de versión
+    ksp("androidx.room:room-compiler:$roomVersion")
 }
